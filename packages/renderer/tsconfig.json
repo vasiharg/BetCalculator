@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "jsx": "react",
+    "paths": {
+      "/@/*": [
+        "./src/*"
+      ]
+    },
+    "lib": ["ESNext", "dom", "dom.iterable"]
+  },
+
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.jsx",
+    "types/**/*.d.ts",
+    "../../types/**/*.d.ts",
+    "../preload/exposedInMainWorld.d.ts"
+  ]
+}
