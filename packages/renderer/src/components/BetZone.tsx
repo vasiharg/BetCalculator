@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { FC, useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import { calculateProfit } from "../utils/calculateProfit";
 import { isNumber } from "../utils/isNumber";
@@ -79,7 +79,8 @@ const OkButton = styled.button`
     }
 `
 
-export const BetZone = () => {
+export const BetZone: FC<any> = (props) => {
+    const oddRef = useRef<any>();
     const [stake, setStake] = useState('');
     const [odd, setOdd] = useState('');
     const [estimateProfit, setEstimatedProfit] = useState('');
@@ -105,6 +106,12 @@ export const BetZone = () => {
         finalEstimated = estimateProfit;
     }
 
+    const saveBet = () => {
+        props.setBets([...props.bets, { stake: +stake, odd: +odd, profit: +estimateProfit }])
+        setStake('');
+        setOdd('');
+    }
+
     return (
         <Row>
             <Column>
@@ -117,6 +124,13 @@ export const BetZone = () => {
                     value={stake}
                     onChange={(e) => {
                         setStake(e.target.value)
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            if (oddRef.current) {
+                                oddRef.current.focus();
+                            }
+                        }
                     }}
                 />
             </Column>
@@ -131,6 +145,12 @@ export const BetZone = () => {
                     onChange={(e) => {
                         setOdd(e.target.value)
                     }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            saveBet();
+                        }
+                    }}
+                    ref={oddRef}
                 />
 
             </Column>
@@ -144,7 +164,13 @@ export const BetZone = () => {
                 </ComputedResult>
             </Column>
             <Column>
-                <OkButton type="button">OK</OkButton>
+                <OkButton
+                    type="button"
+                    onClick={saveBet}
+                    disabled={estimateProfit === ''}
+                >
+                    OK
+                </OkButton>
             </Column>
         </Row >
     )
